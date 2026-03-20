@@ -65,10 +65,7 @@ py_library(
     deps = [
         "//jax",
         "//jax/experimental/jax2tf/tests/flax_models",
-        "//third_party/py/jraph",
-        "//third_party/py/numpy",
-        "//third_party/py/tensorflowjs",
-    ],
+    ] + py_deps(["jraph", "numpy", "tensorflowjs"]),
 )
 
 jax_multiplatform_test(
@@ -86,9 +83,10 @@ jax_multiplatform_test(
     deps = [
         ":tf_test_util",
         "//jax/experimental/jax2tf",
-    ] + py_deps("tensorflow") + py_deps([
+    ] + py_deps([
         "absl/testing",
         "absl/logging",
+        "tensorflow"
     ]),
 )
 
@@ -234,8 +232,7 @@ jax_multiplatform_test(
         ":tf_test_util",
         "//jax/_src:compiler",
         "//jax/experimental/jax2tf",
-        "//third_party/py/absl:app",
-    ],
+    ] + py_deps(["absl-all"]),
 )
 
 jax_multiplatform_test(
@@ -291,10 +288,6 @@ py_binary(
     deps = [
         ":models_util",
         "//jax",
-        "//pyglib:resources",
-        "//third_party/py/absl:app",
-        "//third_party/py/absl/flags",
-        "//third_party/py/numpy",
-        "//third_party/py/tensorflow",
-    ],
+#        "//pyglib:resources",
+    ] + py_deps(["absl-all", "numpy", "tensorflow"]),
 )

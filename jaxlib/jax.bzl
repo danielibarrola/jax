@@ -23,7 +23,6 @@ load("@local_config_rocm//rocm:build_defs.bzl", _if_rocm_is_configured = "if_roc
 load("@nvidia_wheel_versions//:versions.bzl", "NVIDIA_WHEEL_VERSIONS")
 load("@python_version_repo//:py_version.bzl", "HERMETIC_PYTHON_VERSION", "HERMETIC_PYTHON_VERSION_KIND")
 load("@rocm_external_test_deps//:external_deps.bzl", "EXTERNAL_DEPS")
-load("@rocm_prebuilt_test_deps//:external_deps.bzl", PREBUILT_EXTERNAL_DEPS = "EXTERNAL_DEPS")
 load("@rules_cc//cc:defs.bzl", _cc_proto_library = "cc_proto_library")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 load("@test_shard_count//:test_shard_count.bzl", "USE_MINIMAL_SHARD_COUNT")
@@ -85,10 +84,14 @@ _py_deps = {
     "absl/testing:flagsaver": ["@pypi//absl_py"],
     "absl/flags": ["@pypi//absl_py"],
     "cloudpickle": get_optional_dep("@pypi//cloudpickle"),
+    "disable_pmap_shmap_merge": [],
     "epath": get_optional_dep("@pypi//etils"),  # etils.epath
     "filelock": get_optional_dep("@pypi//filelock"),
     "flatbuffers": ["@pypi//flatbuffers"],
+    "flax": get_optional_dep("@pypi//flax"),
+    "google_benchmark": get_optional_dep("@pypi//google-benchmark"),
     "hypothesis": ["@pypi//hypothesis"],
+    "jraph": get_optional_dep("@pypi//jraph"),
     "magma": [],
     "matplotlib": get_optional_dep("@pypi//matplotlib"),
     "mpmath": [],
@@ -102,7 +105,9 @@ _py_deps = {
     "tensorstore": get_optional_dep("@pypi//tensorstore"),
     "torch": [],
     "tensorflow": get_optional_dep("@pypi//tensorflow", ["3.13-ft", "3.14", "3.14-ft"]),
+    "tensorflowjs": get_optional_dep("@pypi//tensorflowjs"),
     "tpu_ops": [],
+    "typing_extensions": get_optional_dep("@pypi//typing_extensions"),
     # TODO(vam): remove this once zstandard builds against Python >3.13
     "zstandard": get_optional_dep("@pypi//zstandard", ["3.13", "3.13-ft", "3.14", "3.14-ft"]),
 }
@@ -203,7 +208,7 @@ def _gpu_test_deps():
         "//jax:config_build_jaxlib_false": if_cuda_is_configured([
             "//jaxlib/tools:pypi_jax_cuda_plugin_with_cuda_deps",
             "//jaxlib/tools:pypi_jax_cuda_pjrt_with_cuda_deps",
-        ]) + if_rocm_is_configured(PREBUILT_EXTERNAL_DEPS),
+        ]) + if_rocm_is_configured(EXTERNAL_DEPS),
         "//jax:config_build_jaxlib_wheel": if_cuda_is_configured([
             "//jaxlib/tools:jax_cuda_plugin_py_import",
             "//jaxlib/tools:jax_cuda_pjrt_py_import",
