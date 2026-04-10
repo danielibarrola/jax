@@ -16,6 +16,4 @@ flax
 jraph
 numpy
 typing_extensions
-tensorflowjs
 google_benchmark
-pyg-library
